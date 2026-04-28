@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-# Course
 class Course(models.Model):
     name = models.CharField(max_length=100)
 
@@ -9,7 +8,6 @@ class Course(models.Model):
         return self.name
 
 
-# Lesson
 class Lesson(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
@@ -18,7 +16,6 @@ class Lesson(models.Model):
         return self.title
 
 
-# Instructor
 class Instructor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
@@ -26,7 +23,6 @@ class Instructor(models.Model):
         return self.user.username
 
 
-# Learner
 class Learner(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
@@ -34,7 +30,6 @@ class Learner(models.Model):
         return self.user.username
 
 
-# Question
 class Question(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     question_text = models.CharField(max_length=200)
@@ -42,8 +37,19 @@ class Question(models.Model):
     def __str__(self):
         return self.question_text
 
+    # 🔥 REQUIRED METHOD
+    def is_get_score(self, selected_ids):
+        all_correct = True
 
-# Choice
+        for choice in self.choice_set.all():
+            if choice.is_correct and choice.id not in selected_ids:
+                all_correct = False
+            if not choice.is_correct and choice.id in selected_ids:
+                all_correct = False
+
+        return all_correct
+
+
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     choice_text = models.CharField(max_length=200)
@@ -53,7 +59,6 @@ class Choice(models.Model):
         return self.choice_text
 
 
-# Submission ✅ (YOU MISSED THIS)
 class Submission(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     choices = models.ManyToManyField(Choice)

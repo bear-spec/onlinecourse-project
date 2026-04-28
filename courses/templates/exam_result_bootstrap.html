@@ -1,16 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Result</title>
+</head>
+<body>
+
 <h2>🎉 Congratulations!</h2>
 
 <p>Score: {{ grade }} / {{ possible }}</p>
 
-<h3>Results:</h3>
+<h3>Exam Results:</h3>
 
 {% for question in course.question_set.all %}
-    <p><b>{{ question.question_text }}</b></p>
+    <h4>{{ question.question_text }}</h4>
 
     {% for choice in question.choice_set.all %}
         <p>
             {{ choice.choice_text }}
-            {% if choice.is_correct %} ✅ Correct {% endif %}
+            {% if choice.is_correct %}
+                ✅ Correct
+            {% endif %}
         </p>
     {% endfor %}
 {% endfor %}
+
+<a href="/">Go Home</a>
+
+</body>
+</html>

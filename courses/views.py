@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.models import User
 from .models import Course, Submission, Choice
+
 
 def course_detail(request, course_id):
     course = get_object_or_404(Course, id=course_id)
@@ -26,20 +26,16 @@ def show_exam_result(request, course_id, submission_id):
 
     selected_ids = [choice.id for choice in submission.choices.all()]
 
-    total = 0
-    correct = 0
+    total_score = 0
+    possible_score = course.question_set.count()
 
     for question in course.question_set.all():
-        correct_choices = question.choice_set.filter(is_correct=True)
-        total += len(correct_choices)
-
-        for choice in correct_choices:
-            if choice.id in selected_ids:
-                correct += 1
+        if question.is_get_score(selected_ids):
+            total_score += 1
 
     return render(request, 'exam_result_bootstrap.html', {
         'course': course,
         'selected_ids': selected_ids,
-        'grade': correct,
-        'possible': total
+        'grade': total_score,
+        'possible': possible_score
     })
