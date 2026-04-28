@@ -1,0 +1,9 @@
+<h2>Available Courses</h2>
+
+{% for course in courses %}
+    <div>
+        <a href="/course/{{ course.id }}/">
+            <h3>{{ course.name }}</h3>
+        </a>
+    </div>
+{% endfor %}

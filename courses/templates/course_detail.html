@@ -1,0 +1,17 @@
+<h2>{{ course.name }}</h2>
+
+<form method="post" action="/submit/{{ course.id }}/">
+    {% csrf_token %}
+
+    {% for question in course.question_set.all %}
+        <h4>{{ question.question_text }}</h4>
+
+        {% for choice in question.choice_set.all %}
+            <input type="radio" name="{{ question.id }}" value="{{ choice.id }}">
+            {{ choice.choice_text }} <br>
+        {% endfor %}
+    {% endfor %}
+
+    <br>
+    <button type="submit">Submit Exam</button>
+</form>
